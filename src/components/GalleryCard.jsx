@@ -5,7 +5,7 @@ import { FiPlus, FiArrowLeft, FiArrowRight } from 'react-icons/fi';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const GalleryCard = () => {
-  const singleImageUrl = 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cGFpbnRpbmd8ZW58MHx8MHx8fDA%3D&w=1000&q=80';
+  const singleImageUrl = 'src/images/image1.jpg';
 
   const initialImages = [
     singleImageUrl, singleImageUrl, singleImageUrl, // Page 1
@@ -16,7 +16,6 @@ const GalleryCard = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const imagesPerPage = 3;
 
-  // --- This logic is updated to handle direction ---
   const [direction, setDirection] = useState(0);
 
   const displayedImages = images.slice(

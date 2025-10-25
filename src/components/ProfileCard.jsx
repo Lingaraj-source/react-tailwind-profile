@@ -1,5 +1,4 @@
 import { useState } from 'react';
-// --- Import HiViewGrid ---
 import { HiOutlineQuestionMarkCircle, HiViewGrid } from 'react-icons/hi';
 
 const ProfileCard = () => {
