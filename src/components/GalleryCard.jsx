@@ -1,22 +1,21 @@
 import { useState } from 'react';
-import { HiOutlineQuestionMarkCircle } from 'react-icons/hi';
+import { HiOutlineQuestionMarkCircle, HiViewGrid } from 'react-icons/hi';
 import { FiPlus, FiArrowLeft, FiArrowRight } from 'react-icons/fi';
-// --- Import motion and AnimatePresence ---
 import { motion, AnimatePresence } from 'framer-motion';
+import myImage from '../images/image1.jpg'; 
 
 const GalleryCard = () => {
-  const singleImageUrl = 'src/images/image1.jpg';
+  const singleImageUrl = myImage;
 
   const initialImages = [
-    singleImageUrl, singleImageUrl, singleImageUrl, // Page 1
-    singleImageUrl, singleImageUrl, singleImageUrl, // Page 2
+    singleImageUrl, singleImageUrl, singleImageUrl,
+    singleImageUrl, singleImageUrl, singleImageUrl,
   ];
 
   const [images, setImages] = useState(initialImages);
   const [currentPage, setCurrentPage] = useState(0);
-  const imagesPerPage = 3;
-
   const [direction, setDirection] = useState(0);
+  const imagesPerPage = 3;
 
   const displayedImages = images.slice(
     currentPage * imagesPerPage,
@@ -28,14 +27,14 @@ const GalleryCard = () => {
 
   const goToNextPage = () => {
     if (canGoNext) {
-      setDirection(1); // Set direction to "right"
+      setDirection(1);
       setCurrentPage(currentPage + 1);
     }
   };
 
   const goToPrevPage = () => {
     if (canGoPrev) {
-      setDirection(-1); // Set direction to "left"
+      setDirection(-1);
       setCurrentPage(currentPage - 1);
     }
   };
@@ -44,85 +43,89 @@ const GalleryCard = () => {
     setImages([...images, singleImageUrl]);
   };
 
-  // --- This object defines the sliding animation ---
   const slideVariants = {
-    hidden: (direction) => ({
-      opacity: 0,
-      x: direction > 0 ? 100 : -100, // Slide in from right or left
-    }),
-    visible: {
-      opacity: 1,
-      x: 0,
-      transition: { duration: 0.3, ease: 'easeOut' }
-    },
-    exit: (direction) => ({
-      opacity: 0,
-      x: direction > 0 ? -100 : 100, // Slide out to right or left
-      transition: { duration: 0.3, ease: 'easeIn' }
-    }),
+    hidden: (direction) => ({ opacity: 0, x: direction > 0 ? 100 : -100 }),
+    visible: { opacity: 1, x: 0, transition: { duration: 0.3, ease: 'easeOut' } },
+    exit: (direction) => ({ opacity: 0, x: direction > 0 ? -100 : 100, transition: { duration: 0.3, ease: 'easeIn' } }),
   };
 
   return (
-    <div className="bg-slate-800/60 border border-slate-700 rounded-2xl p-6 backdrop-blur-lg shadow-2xl overflow-hidden">
+    <div className="bg-slate-800/60 border border-slate-700 rounded-2xl p-5 backdrop-blur-lg shadow-2xl overflow-hidden">
+      {/* --- HEADER --- */}
       <header className="flex justify-between items-center mb-4">
         <div className="flex items-center gap-3">
-          <HiOutlineQuestionMarkCircle className="text-slate-500 w-6 h-6" />
-          <h2 className="font-medium text-white">Gallery</h2>
+          {/* --- Question Mark Button --- */}
+          <button className="bg-gray-900/70 rounded-full p-1.5 text-slate-400 hover:text-white hover:bg-gray-800 transition-colors">
+            <HiOutlineQuestionMarkCircle className="w-5 h-5" />
+          </button>
+          {/* --- Gallery Pill --- */}
+          <div className="bg-gray-900 text-white py-2 px-5 rounded-full text-sm font-medium shadow-md">
+            Gallery
+          </div>
         </div>
         
         <div className="flex items-center gap-2">
+          {/* --- Add Image Button --- */}
           <button 
             onClick={addImage}
-            className="flex items-center gap-2 bg-slate-700 hover:bg-slate-600 rounded-lg py-2 px-4 text-sm font-medium text-white transition-colors"
+            className="flex items-center gap-2 bg-slate-300 hover:bg-slate-200 text-gray-900 rounded-lg py-2 px-4 text-sm font-medium transition-colors"
           >
-            <FiPlus />
+            <FiPlus className="w-4 h-4" />
             Add Image
           </button>
-          <div className="flex gap-1">
+          {/* --- Arrow Buttons --- */}
+          <div className="flex gap-2">
             <button 
               onClick={goToPrevPage}
               disabled={!canGoPrev}
-              className="bg-slate-700/50 p-2 rounded-lg hover:bg-slate-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="bg-gray-900/70 p-2.5 rounded-full text-slate-300 hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              <FiArrowLeft className="text-slate-300" />
+              <FiArrowLeft className="w-4 h-4" />
             </button>
             <button 
               onClick={goToNextPage}
               disabled={!canGoNext}
-              className="bg-slate-700/50 p-2 rounded-lg hover:bg-slate-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="bg-gray-900/70 p-2.5 rounded-full text-slate-300 hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              <FiArrowRight className="text-slate-300" />
+              <FiArrowRight className="w-4 h-4" />
             </button>
           </div>
         </div>
       </header>
 
-      {/* --- This is the animation wrapper --- */}
-      <AnimatePresence initial={false} custom={direction} mode="wait">
-        <motion.div
-          key={currentPage} // This is crucial for re-animating
-          variants={slideVariants}
-          initial="hidden"
-          animate="visible"
-          exit="exit"
-          custom={direction} // Pass direction to variants
-          className="grid grid-cols-3 gap-4"
-        >
-          {displayedImages.map((src, index) => (
-            // --- Hover effect added here ---
-            <div 
-              key={index} 
-              className="rounded-lg overflow-hidden transition-transform duration-300 ease-in-out hover:scale-105"
-            >
-              <img 
-                src={src} 
-                alt={`gallery item ${index + 1}`} 
-                className="w-full h-full object-cover" 
-              />
-            </div>
-          ))}
-        </motion.div>
-      </AnimatePresence>
+      {/* --- BODY --- */}
+      <div className="flex gap-4">
+        {/* --- Grid Icon --- */}
+        <div className="text-slate-500 pt-1">
+          <HiViewGrid className="w-5 h-5" />
+        </div>
+        
+        {/* --- Gallery Grid --- */}
+        <AnimatePresence initial={false} custom={direction} mode="wait">
+          <motion.div
+            key={currentPage}
+            variants={slideVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+            custom={direction}
+            className="grid grid-cols-3 gap-4 w-full"
+          >
+            {displayedImages.map((src, index) => (
+              <div 
+                key={index} 
+                className="rounded-lg overflow-hidden transition-transform duration-300 ease-in-out hover:scale-105"
+              >
+                <img 
+                  src={src} 
+                  alt={`gallery item ${index + 1}`} 
+                  className="w-full h-full object-cover" 
+                />
+              </div>
+            ))}
+          </motion.div>
+        </AnimatePresence>
+      </div>
     </div>
   );
 };
